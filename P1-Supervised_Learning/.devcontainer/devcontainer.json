@@ -1,0 +1,31 @@
+{
+	"name": "P1-Supervised_Learning",
+	"image": "ml",
+    "workspaceMount": "src=${localWorkspaceFolder},target=/work/P1-Supervised_Learning,type=bind",
+	"workspaceFolder": "/work/P1-Supervised_Learning",
+	"mounts": ["source=${localWorkspaceFolder}/../datasets,target=/work/datasets,type=bind"],
+
+	// Configure tool-specific properties.
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": {
+				"python.linting.enabled": true,
+				"python.linting.pylintEnabled": true,
+				"python.defaultInterpreterPath": "/opt/conda/envs/ml/bin/python",
+				"python.terminal.activateEnvironment": true
+			},
+
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"James-Yu.latex-workshop",
+				"tecosaur.latex-utilities",
+				"mechatroner.rainbow-csv"
+			]
+		}
+	},
+	"containerEnv": {"PYTHONPATH": "/work:/work/P1-Supervised_Learning"}
+}
