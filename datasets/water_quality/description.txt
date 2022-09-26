@@ -1,0 +1,2 @@
+source: https://www.kaggle.com/datasets/adityakadiwal/water-potability
+Example: https://www.kaggle.com/code/d4rklucif3r/water-quality-luciferml-76-deployment

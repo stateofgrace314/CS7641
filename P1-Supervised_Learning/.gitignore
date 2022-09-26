@@ -1,0 +1,8 @@
+outputs/
+.vscode/
+__pycache__/
+Report/*
+!Report/*.pdf
+!Report/*.tex
+!Report/*.bib
+!Report/*.cls

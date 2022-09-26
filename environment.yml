@@ -1,0 +1,24 @@
+name: ml
+channels:
+- conda-forge
+- defaults
+dependencies:
+- python=3.9
+- scikit-learn=1.1.2
+- numpy=1.23.3
+- scipy=1.9.1
+- theano=1.0.5
+- tensorflow=2.9.1
+- pytorch=1.12.1
+- pandas=1.4.4
+- matplotlib=3.5.3
+- seaborn=0.12.0
+- pylint
+- jupyter
+- jupyterlab
+- notebook
+- ipywidgets
+# - pip:
+#   - jsons==0.8.8
+#   - gradescope-utils
+#   - subprocess32
