@@ -1,0 +1,31 @@
+{
+	"name": "P2-Randomized_Optimization",
+	"image": "ml",
+    "workspaceMount": "src=${localWorkspaceFolder},target=/work/P2-Randomized_Optimization,type=bind",
+	"workspaceFolder": "/work/P2-Randomized_Optimization",
+	"mounts": ["source=${localWorkspaceFolder}/../datasets,target=/work/datasets,type=bind"],
+
+	// Configure tool-specific properties.
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": {
+				"python.linting.enabled": true,
+				"python.linting.pylintEnabled": true,
+				"python.defaultInterpreterPath": "/opt/conda/envs/ml/bin/python",
+				"python.terminal.activateEnvironment": true
+			},
+
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"James-Yu.latex-workshop",
+				"tecosaur.latex-utilities",
+				"mechatroner.rainbow-csv"
+			]
+		}
+	},
+	"containerEnv": {"PYTHONPATH": "/work:/work/P2-Randomized_Optimization"}
+}

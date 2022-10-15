@@ -1,0 +1,14 @@
+{
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.linting.pylintArgs": [
+        "--disable=invalid-name,wrong-import-order,wrong-import-position,consider-using-enumerate,too-many-arguments,pointless-string-statement"
+    ],
+    "[latex]": {
+        "editor.wordWrap": "on"
+    },
+    "[plaintext]": {
+        "editor.wordWrap": "on",
+    },
+    "editor.rulers": [100]
+}
