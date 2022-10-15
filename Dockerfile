@@ -78,7 +78,7 @@ RUN apt-get install -y biber
 FROM latex as cudnn
 ENV OS=ubuntu2004
 
-RUN apt clean && apt update && apt upgrade && apt-get install -y software-properties-common
+RUN apt clean && apt update && apt upgrade -y && apt-get install -y software-properties-common
 
 RUN apt-get install -y gnupg &&\
     wget https://developer.download.nvidia.com/compute/cuda/repos/${OS}/x86_64/cuda-${OS}.pin && \

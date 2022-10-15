@@ -18,7 +18,8 @@ dependencies:
 - jupyterlab
 - notebook
 - ipywidgets
-# - pip:
-#   - jsons==0.8.8
+- pip=22.3
+- pip:
+  - mlrose
 #   - gradescope-utils
 #   - subprocess32

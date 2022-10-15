@@ -8,3 +8,6 @@ All development is done in a Linux environment using Docker. The Dockerfile and 
 # Assignments
 ## Project1 - Supervised Learning
 5 supervised learning models
+
+## Project2 - Randomized Optimization
+Testing out different randomized optimization problems and algorithms
