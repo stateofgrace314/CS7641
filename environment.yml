@@ -20,6 +20,6 @@ dependencies:
 - ipywidgets
 - pip=22.3
 - pip:
-  - mlrose
+  - mlrose-hiive
 #   - gradescope-utils
 #   - subprocess32
