@@ -1,0 +1,6 @@
+# setup ML environment
+FROM kgrace/ml_cudnn
+COPY environment.yml environment.yml
+RUN conda env create --file environment.yml
+
+WORKDIR /work

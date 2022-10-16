@@ -1,6 +1,6 @@
 {
 	"name": "P1-Supervised_Learning",
-	"image": "ml",
+	"image": "kgrace/ml_dev",
     "workspaceMount": "src=${localWorkspaceFolder},target=/work/P1-Supervised_Learning,type=bind",
 	"workspaceFolder": "/work/P1-Supervised_Learning",
 	"mounts": ["source=${localWorkspaceFolder}/../datasets,target=/work/datasets,type=bind"],

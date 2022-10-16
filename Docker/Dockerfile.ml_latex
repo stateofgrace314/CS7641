@@ -1,0 +1,9 @@
+# Install Latex
+FROM kgrace/ml_anaconda
+
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y \
+    texlive-full
+RUN apt-get install -y biber
+# set env
+# ENV PATH=/usr/local/texlive/2018/bin/x86_64-linux:$PATH

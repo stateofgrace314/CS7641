@@ -2,3 +2,4 @@ __pycache__/
 report/kgrace6-analysis.*
 !report/kgrace6-analysis.pdf
 !report/kgrace6-analysis.tex
+plots/

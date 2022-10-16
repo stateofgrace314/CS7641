@@ -1,12 +1,9 @@
 """
 Definition of the traveling salesperson optimization problem
 """
-import six
-import sys
-sys.modules['sklearn.externals.six'] = six
-import mlrose
+import mlrose_hiive as mlrose
 from RandOptBase import RandOptBase
-from numpy.random import randint
+from numpy.random import randint, seed
 
 def runTSP():
     """
@@ -15,12 +12,14 @@ def runTSP():
     print("** Starting Evaluation of Traveling Salesperson **")
     length = 20
     coords_list = []
+    seed(0)
     while len(coords_list) < length:
         coord = (randint(0, 21), randint(0, 21))
         if coord not in coords_list:
             coords_list.append(coord)
     objective = mlrose.TravellingSales(coords=coords_list)
     problem = mlrose.TSPOpt(length=length, fitness_fn=objective, maximize=False)
+    problem.set_mimic_fast_mode(True)
 
     # setup the optimizers
     randOptBase = RandOptBase(verbose=True)

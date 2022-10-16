@@ -1,10 +1,7 @@
 """
 Definition of the flip flop optimization problem and some functions to help with analysis
 """
-import six
-import sys
-sys.modules['sklearn.externals.six'] = six
-import mlrose
+import mlrose_hiive as mlrose
 from RandOptBase import RandOptBase
 
 def runFlipFlop():
@@ -14,6 +11,7 @@ def runFlipFlop():
     print("** Starting Evaluation of Flip Flop **")
     objective = mlrose.FlipFlop()
     problem = mlrose.DiscreteOpt(length=100, fitness_fn=objective, maximize=True, max_val=2)
+    problem.set_mimic_fast_mode(True)
 
     # setup the optimizers
     randOptBase = RandOptBase(verbose=True)

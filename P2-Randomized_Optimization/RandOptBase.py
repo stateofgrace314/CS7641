@@ -3,15 +3,12 @@ The base model for all randomized optimizers being used in GATech ML, CS7641
 Since mlrose has very easy to use optimization models, this class is mostly just the default
 parameters, as well as some helper functions
 """
-import six
-import sys
-sys.modules['sklearn.externals.six'] = six
-import mlrose
 from copy import deepcopy
 from time import time
 from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
+import mlrose_hiive as mlrose
 
 OUTPUT_DIR = str(Path(__file__).parent.resolve()) + "/plots"
 
@@ -24,6 +21,7 @@ class RandOptBase:
         self.verbose = verbose
         # number of iterations in grid search
         self.random_state = 0
+        # Set the default states and parameters for each algorithm
         # Randomized Hill Climbing
         self.rhc = {"name": "Randomized Hill Climbing",
                     "algorithm": mlrose.random_hill_climb,
@@ -77,6 +75,44 @@ class RandOptBase:
         for alg in self._algs:
             alg["params"]["problem"] = deepcopy(problem)
 
+    def SetRHCIters(self, num_iters):
+        """
+        Set the max iteration parameter for the Random Hill Climbing Algorithm
+        """
+        self._set_iters(self.rhc, num_iters)
+
+    def SetSAIters(self, num_iters):
+        """
+        Set the max iteration parameter for the Simulated Annealing Algorithm
+        """
+        self._set_iters(self.sa, num_iters)
+
+    def SetGAIters(self, num_iters):
+        """
+        Set the max iteration parameter for the Genetic Algorithm
+        """
+        self._set_iters(self.ga, num_iters)
+
+    def SetMIMICIters(self, num_iters):
+        """
+        Set the max iteration parameter for the MIMIC Algorithm
+        """
+        self._set_iters(self.mimic, num_iters)
+
+    @staticmethod
+    def _set_iters(algorithm, num_iters):
+        """
+        Helper function to set the number of iterations for the input algorithm
+        """
+        algorithm["params"]["max_attempts"] = num_iters
+        algorithm["params"]["max_iters"] = num_iters
+
+    def SetRHCRestarts(self, num_restarts):
+        """
+        Set the restarts parameter for the Random Hill Climbing Algorithm
+        """
+        self.rhc["params"]["restarts"] = num_restarts
+
     def EvaluateOpts(self):
         """
         Runs evaluation for each optimizer over the problem given to it and plots the results.
@@ -88,14 +124,28 @@ class RandOptBase:
             params = alg["params"]
             plotter = alg["plotter"]
             if self.verbose:
-                print(f"Running evaluation for {name}")
-            start = time()
-            best_state, best_fitness, fitness_curve = algorithm(**params)
-            runtime = time() - start
+                print(f"    Running evaluation for {name}")
+            # initialize storage for outputs
+            best_states, best_fitnesses, fitness_curves, runtimes = [], [], [], []
+            # loop through random states to get avg and mean for each
+            for random_state in range(5):
+                params["random_state"] = random_state
+                start = time()
+                state, fitness, curve = algorithm(**params)
+                runtime = time() - start
+                best_states.append(state)
+                best_fitnesses.append(fitness)
+                fitness_curves.append(curve)
+                runtimes.append(time() - start)
+            plotter(fitness_curves)
+            avg_peak_time = self._time_to_peak(fitness_curves, runtimes)
+            # print results to terminal
             if self.verbose:
-                print(f"Completed optimization for {name} in {runtime} seconds")
-                print(f"    Best score = {best_fitness}")
-            plotter(best_state, best_fitness, fitness_curve, runtime)
+                runtime = sum(runtimes)/len(runtimes)
+                print(f"    Optimization for {name} completed in avg time of {runtime} seconds")
+                print(f"    Average time to reach optimal value = {avg_peak_time}")
+                print(f"    Best score = {max(best_fitnesses)}")
+        # finalize plot
         plt.title(f"{self.problemName} - Objective Score vs Iteration")
         plt.legend(loc="best")
         plt.xlabel("Iteration")
@@ -104,46 +154,59 @@ class RandOptBase:
         plt.close()
         return
 
-    def _plotRHC(self, best_state, best_fitness, fitness_curve, runtime):
+    @staticmethod
+    def _time_to_peak(curves, runtimes):
+        """
+        Helper function to compute the time it took the algorithm to reach the optimal solution
+        """
+        times_to_peak = []
+        for curve, runtime in curves, runtimes:
+            optimal_value = max(curve)
+            it_time = runtime/len(curve)
+            iters = 0
+            for i in curve:
+                iters += 1
+                if i >= optimal_value:
+                    break
+            times_to_peak.append(iters * it_time)
+        return sum(times_to_peak)/len(times_to_peak)
+
+    def _plotRHC(self, fitness_curves):
         """
         Run Evaluation for the Random Hill Climbing Algorithm
         """
-        x = np.arange(1, self.rhc["params"]["max_iters"] + 1)
-        # mean = np.mean(fitness_curve, axis=0)
-        mean = fitness_curve
-        # std = np.std(fitness_curve, axis=0)
+        x = np.arange(1, self.rhc["params"]["max_iters"] * (self.rhc["params"]["restarts"] + 1) + 1)
+        mean = np.mean(fitness_curves, axis=0)
+        std = np.std(fitness_curves, axis=0)
         plot = plt.plot(x, mean, label="RHC")
-        # plt.fill_between(x, mean - std, mean + std, alpha=0.1, color=plot[0].get_color())
+        plt.fill_between(x, mean - std, mean + std, alpha=0.1, color=plot[0].get_color())
 
-    def _plotSA(self, best_state, best_fitness, fitness_curve, runtime):
+    def _plotSA(self, fitness_curves):
         """
         Run Evaluation for the Simulated Annealing Algorithm
         """
         x = np.arange(1, self.sa["params"]["max_iters"] + 1)
-        # mean = np.mean(fitness_curve, axis=0)
-        mean = fitness_curve
-        # std = np.std(fitness_curve, axis=0)
+        mean = np.mean(fitness_curves, axis=0)
+        std = np.std(fitness_curves, axis=0)
         plot = plt.plot(x, mean, label="SA")
-        # plt.fill_between(x, mean - std, mean + std, alpha=0.1, color=plot[0].get_color())
+        plt.fill_between(x, mean - std, mean + std, alpha=0.1, color=plot[0].get_color())
 
-    def _plotGA(self, best_state, best_fitness, fitness_curve, runtime):
+    def _plotGA(self, fitness_curves):
         """
         Run Evaluation for the Genetic Algorithm
         """
         x = np.arange(1, self.ga["params"]["max_iters"] + 1)
-        # mean = np.mean(fitness_curve, axis=0)
-        mean = fitness_curve
-        # std = np.std(fitness_curve, axis=0)
+        mean = np.mean(fitness_curves, axis=0)
+        std = np.std(fitness_curves, axis=0)
         plot = plt.plot(x, mean, label="GA")
-        # plt.fill_between(x, mean - std, mean + std, alpha=0.1, color=plot[0].get_color())
+        plt.fill_between(x, mean - std, mean + std, alpha=0.1, color=plot[0].get_color())
 
-    def _plotMIMIC(self, best_state, best_fitness, fitness_curve, runtime):
+    def _plotMIMIC(self, fitness_curves):
         """
         Run Evaluation for the MIMIC Algorithm
         """
         x = np.arange(1, self.mimic["params"]["max_iters"] + 1)
-        # mean = np.mean(fitness_curve, axis=0)
-        mean = fitness_curve
-        # std = np.std(fitness_curve, axis=0)
+        mean = np.mean(fitness_curves, axis=0)
+        std = np.std(fitness_curves, axis=0)
         plot = plt.plot(x, mean, label="MIMIC")
-        # plt.fill_between(x, mean - std, mean + std, alpha=0.1, color=plot[0].get_color())
+        plt.fill_between(x, mean - std, mean + std, alpha=0.1, color=plot[0].get_color())
