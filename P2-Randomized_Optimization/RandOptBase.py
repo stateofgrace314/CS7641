@@ -23,33 +23,42 @@ class RandOptBase:
         self.random_state = 0
         # Set the default states and parameters for each algorithm
         # Randomized Hill Climbing
-        self.rhc = {"name": "Randomized Hill Climbing",
+        self.rhc = {"name": "Random_Hill_Climbing",
                     "algorithm": mlrose.random_hill_climb,
                     "params": {"restarts": 0,
                                "max_attempts": 10000,
                                "max_iters": 10000,
                                "curve": True,
                                "random_state": self.random_state},
-                    "plotter": self._plotRHC}
+                    "plotter": self._plotRHC,
+                    "setter": self.SetRHC,
+                    "param_to_iterate": "restarts",
+                    "param_range": np.arange(0, 50, 2)}
         # Simulated Annealing
         decay = mlrose.ExpDecay(init_temp=100, exp_const=0.3, min_temp=0.001)
-        self.sa = {"name": "Simulated Annealing",
+        self.sa = {"name": "Simulated_Annealing",
                    "algorithm": mlrose.simulated_annealing,
                    "params": {"schedule": decay,
                               "max_attempts": 10000,
                               "max_iters": 10000,
                               "curve": True,
                               "random_state": self.random_state},
-                   "plotter": self._plotSA}
+                   "plotter": self._plotSA,
+                   "setter": self.SetSA,
+                   "param_to_iterate": "decay_rate",
+                   "param_range": np.arange(0.05, 2.01, 0.05)}
         # Genetic Algorithm
-        self.ga = {"name": "Genetic Algorithm",
+        self.ga = {"name": "Genetic_Algorithm",
                    "algorithm": mlrose.genetic_alg,
                    "params": {"pop_size": 1000,
                               "max_attempts": 500,
                               "max_iters": 500,
                               "curve": True,
                               "random_state": self.random_state},
-                   "plotter": self._plotGA}
+                   "plotter": self._plotGA,
+                   "setter": self.SetGA,
+                   "param_to_iterate": "pop_size",
+                   "param_range": np.arange(200, 2001, 200)}
         # MIMIC
         self.mimic = {"name": "MIMIC",
                       "algorithm": mlrose.mimic,
@@ -58,7 +67,10 @@ class RandOptBase:
                                  "max_iters": 100,
                                  "curve": True,
                                  "random_state": self.random_state},
-                      "plotter": self._plotMIMIC}
+                      "plotter": self._plotMIMIC,
+                      "setter": self.SetMIMIC,
+                      "param_to_iterate": "pop_size",
+                      "param_range": np.arange(200, 2001, 200)}
         # name of the problem
         self.problemName = ""
         # quick list of all optimization algorithms
@@ -75,56 +87,88 @@ class RandOptBase:
         for alg in self._algs:
             alg["params"]["problem"] = deepcopy(problem)
 
-    def SetRHCIters(self, num_iters):
+    def SetRHC(self, params_dict):
         """
-        Set the max iteration parameter for the Random Hill Climbing Algorithm
+        Setter function for Random Hill Climbing
         """
-        self._set_iters(self.rhc, num_iters)
+        for k, v in params_dict.items():
+            if "iters" in k:
+                self.rhc["params"]["max_attempts"] = v
+                self.rhc["params"]["max_iters"] = v
+            elif k.lower() == "restarts":
+                self.rhc["params"]["restarts"] = v
+            elif k.lower() == "random_state":
+                self.rhc["params"]["random_state"] = v
+            elif k.lower() == "param_range":
+                self.rhc["param_range"] = v
+            else:
+                print(f"WARNING: Unknown or illegal parameter change attempted on RHS: {k} = {v}")
 
-    def SetSAIters(self, num_iters):
+    def SetSA(self, params_dict):
         """
-        Set the max iteration parameter for the Simulated Annealing Algorithm
+        Setter function for Simulated Annealing
         """
-        self._set_iters(self.sa, num_iters)
+        for k, v in params_dict.items():
+            if "iters" in k:
+                self.sa["params"]["max_attempts"] = v
+                self.sa["params"]["max_iters"] = v
+            elif k.lower() == "random_state":
+                self.sa["params"]["random_state"] = v
+            elif k.lower() == "param_range":
+                self.sa["param_range"] = v
+            elif k.lower() == "decay_rate":
+                decay = mlrose.ExpDecay(init_temp=100, exp_const=v, min_temp=0.001)
+                self.sa["params"]["schedule"] = decay
+            else:
+                print(f"WARNING: Unknown or illegal parameter change attempted on SA: {k} = {v}")
 
-    def SetGAIters(self, num_iters):
+    def SetGA(self, params_dict):
         """
-        Set the max iteration parameter for the Genetic Algorithm
+        Setter function for Genetic Algorithm
         """
-        self._set_iters(self.ga, num_iters)
+        for k, v in params_dict.items():
+            if "iters" in k:
+                self.ga["params"]["max_attempts"] = v
+                self.ga["params"]["max_iters"] = v
+            elif k.lower() == "random_state":
+                self.ga["params"]["random_state"] = v
+            elif k.lower() == "param_range":
+                self.ga["param_range"] = v
+            elif k.lower() == "pop_size":
+                self.ga["params"]["pop_size"] = v
+            else:
+                print(f"WARNING: Unknown or illegal parameter change attempted on GA: {k} = {v}")
 
-    def SetMIMICIters(self, num_iters):
+    def SetMIMIC(self, params_dict):
         """
-        Set the max iteration parameter for the MIMIC Algorithm
+        Setter function for MIMIC
         """
-        self._set_iters(self.mimic, num_iters)
-
-    @staticmethod
-    def _set_iters(algorithm, num_iters):
-        """
-        Helper function to set the number of iterations for the input algorithm
-        """
-        algorithm["params"]["max_attempts"] = num_iters
-        algorithm["params"]["max_iters"] = num_iters
-
-    def SetRHCRestarts(self, num_restarts):
-        """
-        Set the restarts parameter for the Random Hill Climbing Algorithm
-        """
-        self.rhc["params"]["restarts"] = num_restarts
+        for k, v in params_dict.items():
+            if "iters" in k:
+                self.mimic["params"]["max_attempts"] = v
+                self.mimic["params"]["max_iters"] = v
+            elif k.lower() == "random_state":
+                self.mimic["params"]["random_state"] = v
+            elif k.lower() == "param_range":
+                self.mimic["param_range"] = v
+            elif k.lower() == "pop_size":
+                self.mimic["params"]["pop_size"] = v
+            else:
+                print(f"WARNING: Unknown or illegal parameter change attempted on MIMIC: {k} = {v}")
 
     def EvaluateOpts(self):
         """
         Runs evaluation for each optimizer over the problem given to it and plots the results.
         """
         plt.figure()
+        param_it_results = {}
         for alg in self._algs:
             name = alg["name"]
             algorithm = alg["algorithm"]
             params = alg["params"]
             plotter = alg["plotter"]
             if self.verbose:
-                print(f"    Running evaluation for {name}")
+                print(f"  Running evaluation for {name}")
             # initialize storage for outputs
             best_states, best_fitnesses, fitness_curves, runtimes = [], [], [], []
             # loop through random states to get avg and mean for each
@@ -137,21 +181,46 @@ class RandOptBase:
                 best_fitnesses.append(fitness)
                 fitness_curves.append(curve)
                 runtimes.append(time() - start)
-            plotter(fitness_curves)
+            plotter(fitness_curves, param_it_results)
             avg_peak_time = self._time_to_peak(fitness_curves, runtimes)
             # print results to terminal
             if self.verbose:
                 runtime = sum(runtimes)/len(runtimes)
-                print(f"    Optimization for {name} completed in avg time of {runtime} seconds")
+                print(f"    {name} completed in avg time of {runtime} seconds")
                 print(f"    Average time to reach optimal value = {avg_peak_time}")
                 print(f"    Best score = {max(best_fitnesses)}")
-        # finalize plot
+        # finalize performace plot
         plt.title(f"{self.problemName} - Objective Score vs Iteration")
         plt.legend(loc="best")
+        plt.grid()
         plt.xlabel("Iteration")
         plt.ylabel("Score")
         plt.savefig(f"{OUTPUT_DIR}/{self.problemName}-ObjectiveVsIteration.png")
         plt.close()
+        # plot the parameter iteration data
+        for alg in self._algs:
+            alg_name = alg["name"]
+            param = alg["param_to_iterate"]
+            results = param_it_results[alg_name]
+            x = results["x"]
+            runtimes = results["runtimes"]
+            best_fitnesses = results["best_fitnesses"]
+            # fitness_curves = param_it_results[alg_name]["curves"]
+            fig, axes = plt.subplots(2, 1)
+            fig.suptitle(f"{self.problemName} - {alg_name} Runtime and Peak Score vs {param}")
+            fig.set_size_inches(4,6)
+            fig.set_dpi(90)
+            axes[0].plot(x, runtimes)
+            axes[0].grid()
+            axes[0].set_xlabel(param)
+            axes[0].set_ylabel("Runtime (s)")
+            axes[1].plot(x, best_fitnesses)
+            axes[1].grid()
+            axes[1].set_xlabel(param)
+            axes[1].set_ylabel("Fitness Score")
+            # save and close
+            plt.savefig(f"{OUTPUT_DIR}/{self.problemName}-{alg_name}_Over_{param}.png")
+            plt.close()
         return
 
     @staticmethod
@@ -160,7 +229,9 @@ class RandOptBase:
         Helper function to compute the time it took the algorithm to reach the optimal solution
         """
         times_to_peak = []
-        for curve, runtime in curves, runtimes:
+        for i in range(len(curves)):
+            curve = curves[i][:,0]
+            runtime = runtimes[i]
             optimal_value = max(curve)
             it_time = runtime/len(curve)
             iters = 0
@@ -171,42 +242,73 @@ class RandOptBase:
             times_to_peak.append(iters * it_time)
         return sum(times_to_peak)/len(times_to_peak)
 
-    def _plotRHC(self, fitness_curves):
+    @staticmethod
+    def _iterate_params(algorithm, results):
+        """
+        Helper function to iterate over parameters and store results
+        """
+        fitnesses, curves, runtimes = [], [], []
+        algorithm["setter"]({"random_state": 0})
+        for p in algorithm["param_range"]:
+            algorithm["setter"]({algorithm["param_to_iterate"]: p})
+            start = time()
+            *_, fitness, curve = algorithm["algorithm"](**algorithm["params"])
+            runtimes.append(time() - start)
+            fitnesses.append(fitness)
+            curves.append(curve[:,0])
+        results[algorithm["name"]] = {"x": algorithm["param_range"],
+                                      "runtimes": runtimes,
+                                      "best_fitnesses": fitnesses,
+                                      "fitness_curves": curves}
+
+    def _plotRHC(self, fitness_curves, param_it_results):
         """
         Run Evaluation for the Random Hill Climbing Algorithm
         """
-        x = np.arange(1, self.rhc["params"]["max_iters"] * (self.rhc["params"]["restarts"] + 1) + 1)
-        mean = np.mean(fitness_curves, axis=0)
-        std = np.std(fitness_curves, axis=0)
+        x = np.arange(1, self.rhc["params"]["max_iters"] + 1)
+        mean = np.mean(fitness_curves, axis=0)[:,0]
+        std = np.std(fitness_curves, axis=0)[:,0]
         plot = plt.plot(x, mean, label="RHC")
         plt.fill_between(x, mean - std, mean + std, alpha=0.1, color=plot[0].get_color())
 
-    def _plotSA(self, fitness_curves):
+        # iterate over random restart values
+        self._iterate_params(self.rhc, param_it_results)
+
+    def _plotSA(self, fitness_curves, param_it_results):
         """
         Run Evaluation for the Simulated Annealing Algorithm
         """
         x = np.arange(1, self.sa["params"]["max_iters"] + 1)
-        mean = np.mean(fitness_curves, axis=0)
-        std = np.std(fitness_curves, axis=0)
+        mean = np.mean(fitness_curves, axis=0)[:,0]
+        std = np.std(fitness_curves, axis=0)[:,0]
         plot = plt.plot(x, mean, label="SA")
         plt.fill_between(x, mean - std, mean + std, alpha=0.1, color=plot[0].get_color())
 
-    def _plotGA(self, fitness_curves):
+        # iterate over parameter values
+        self._iterate_params(self.sa, param_it_results)
+
+    def _plotGA(self, fitness_curves, param_it_results):
         """
         Run Evaluation for the Genetic Algorithm
         """
         x = np.arange(1, self.ga["params"]["max_iters"] + 1)
-        mean = np.mean(fitness_curves, axis=0)
-        std = np.std(fitness_curves, axis=0)
+        mean = np.mean(fitness_curves, axis=0)[:,0]
+        std = np.std(fitness_curves, axis=0)[:,0]
         plot = plt.plot(x, mean, label="GA")
         plt.fill_between(x, mean - std, mean + std, alpha=0.1, color=plot[0].get_color())
 
-    def _plotMIMIC(self, fitness_curves):
+        # iterate over parameter values
+        self._iterate_params(self.ga, param_it_results)
+
+    def _plotMIMIC(self, fitness_curves, param_it_results):
         """
         Run Evaluation for the MIMIC Algorithm
         """
         x = np.arange(1, self.mimic["params"]["max_iters"] + 1)
-        mean = np.mean(fitness_curves, axis=0)
-        std = np.std(fitness_curves, axis=0)
+        mean = np.mean(fitness_curves, axis=0)[:,0]
+        std = np.std(fitness_curves, axis=0)[:,0]
         plot = plt.plot(x, mean, label="MIMIC")
         plt.fill_between(x, mean - std, mean + std, alpha=0.1, color=plot[0].get_color())
+
+        # iterate over parameter values
+        self._iterate_params(self.mimic, param_it_results)

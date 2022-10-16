@@ -3,6 +3,7 @@ Definition of the flip flop optimization problem and some functions to help with
 """
 import mlrose_hiive as mlrose
 from RandOptBase import RandOptBase
+import numpy as np
 
 def runFlipFlop():
     """
@@ -16,6 +17,10 @@ def runFlipFlop():
     # setup the optimizers
     randOptBase = RandOptBase(verbose=True)
     randOptBase.SetProblem(problem, "Flip_Flop")
+    randOptBase.SetRHC({"iters": 2500, "restarts": 4})
+    randOptBase.SetSA({"iters": 2500, "param_range": np.arange(0.05, 2.01, 0.05)})
+    randOptBase.SetGA({"iters": 500, "param_range": np.arange(200, 2001, 200)})
+    randOptBase.SetMIMIC({"iters": 100, "param_range": np.arange(200, 2001, 200)})
 
     # run the gridsearch and evaluate the optimizers
     randOptBase.EvaluateOpts()
