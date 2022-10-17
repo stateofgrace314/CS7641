@@ -1,6 +1,6 @@
 {
 	"name": "P2-Randomized_Optimization",
-	"image": "ml",
+	"image": "kgrace/ml_dev",
     "workspaceMount": "src=${localWorkspaceFolder},target=/work/P2-Randomized_Optimization,type=bind",
 	"workspaceFolder": "/work/P2-Randomized_Optimization",
 	"mounts": ["source=${localWorkspaceFolder}/../datasets,target=/work/datasets,type=bind"],
