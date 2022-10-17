@@ -94,7 +94,7 @@ As predicted, both random hill climbing and simulated annealing both settled in 
 	\subfigure[]{\frame{\includegraphics[width=0.24\textwidth]{../plots/Four_Peaks-Simulated_Annealing_Over_decay_rate.png}}}
 	\subfigure[]{\frame{\includegraphics[width=0.24\textwidth]{../plots/Four_Peaks-Genetic_Algorithm_Over_pop_size.png}}}
 	\subfigure[]{\frame{\includegraphics[width=0.24\textwidth]{../plots/Four_Peaks-MIMIC_Over_pop_size.png}}}
-	\caption{Parameter tuning for (a) RHC using number of random restarts, and (b) Simulated Annealing using rate of decay (c) GA using population size, and (d) MIMIC using population size}
+	\caption{Four Peaks Parameter tuning for (a) RHC using number of random restarts, and (b) Simulated Annealing using rate of decay (c) GA using population size, and (d) MIMIC using population size}
 	\label{fig:fig2}
 \end{figure}
 Iterating over a number of random restarts for the RHC algorithm shows expected results. There is basically a linear increase in runtime as restarts are increased, and it still doesn't help the end score. Hypothetically, with enough restarts, it would eventually find it, but that would be expensive.
@@ -143,7 +143,7 @@ Most of this is as predicted. MIMIC scores the best, but is also the slowest, an
 	\subfigure[]{\frame{\includegraphics[width=0.24\textwidth]{../plots/Flip_Flop-Simulated_Annealing_Over_decay_rate.png}}}
 	\subfigure[]{\frame{\includegraphics[width=0.24\textwidth]{../plots/Flip_Flop-Genetic_Algorithm_Over_pop_size.png}}}
 	\subfigure[]{\frame{\includegraphics[width=0.24\textwidth]{../plots/Flip_Flop-MIMIC_Over_pop_size.png}}}
-	\caption{Parameter tuning for (a) RHC using number of random restarts, and (b) Simulated Annealing using rate of decay (c) GA using population size, and (d) MIMIC using population size}
+	\caption{Flip Flop Parameter tuning for (a) RHC using number of random restarts, and (b) Simulated Annealing using rate of decay (c) GA using population size, and (d) MIMIC using population size}
 	\label{fig:fig4}
 \end{figure}
 Since random hill climbing requires luck to perform well in this situation, it's no surprise that increased restarts generally improve the fitness score, but it still plateaus since there is not a strong gradient to follow.
@@ -192,7 +192,7 @@ TSP definitely has the most surprising results compared to what I predicted. Bas
 	\subfigure[]{\frame{\includegraphics[width=0.24\textwidth]{../plots/TSP-Simulated_Annealing_Over_decay_rate.png}}}
 	\subfigure[]{\frame{\includegraphics[width=0.24\textwidth]{../plots/TSP-Genetic_Algorithm_Over_pop_size.png}}}
 	\subfigure[]{\frame{\includegraphics[width=0.24\textwidth]{../plots/TSP-MIMIC_Over_pop_size.png}}}
-	\caption{Parameter tuning for (a) RHC using number of random restarts, and (b) Simulated Annealing using rate of decay (c) GA using population size, and (d) MIMIC using population size}
+	\caption{TSP Parameter tuning for (a) RHC using number of random restarts, and (b) Simulated Annealing using rate of decay (c) GA using population size, and (d) MIMIC using population size}
 	\label{fig:fig6}
 \end{figure}
 Even though RHC compared to other algorithms was surprising, the parameter tuning was not. It has the same linear increase in runtime, and gets closer to optimal with more restarts.
@@ -205,12 +205,44 @@ MIMIC is similar to GA in that higher population increases end accuracy, but I'm
 
 \section{Randomized Optimization in Neural Networks}
 \subsection{Summary}
-%TODO
+Neural Networks are an example of a machine learning model in which optimization is required. They require optimizing the weight values for each node in the network to maximize the accuracy of the model. This is another form of a fitness function, because it is an equation where parameters are being tuned to maximize some output. In the case of Neural Networks, this is normally done using backpropagation, which is similar to hill climbing, although there are some other heuristics and techniques which help prevent it from getting stuck in local optima.
 
-%TODO
+Since neural networks meet the requirements of a fitness function, the same randomized optimization algorithms can be used to optimize the weights. The main difference between this and the previous problems is that neural network weights are continuous where the previous problems were all discrete. As a result, MIMIC could not be used because it requires the parameters to be discrete.
+
+\subsection{Results}
+For testing out these optimizers on a neural network, I have implemented a standard neural network using backpropagation, as well as one using Random Hill Climbing, Simulated Annealing, and Genetic Algorithm. To test them out, I'm using the water quality dataset (\cite{water}) from the Supervised Learning project.
+% results table
+\begin{center}
+	\begin{tabular}{|c||c|c|c|}
+	 \hline
+	 Algorithm & Accuracy & Avg Train Time & Avg Query Time \\
+	 \hline\hline
+	 Backpropagation & 66.25\% & 0.7882s & 2.062e-3s  \\
+	 \hline
+	 Random Hill Climb & 39.95\% & 103.4s & 3.0523-4s  \\
+	 \hline
+	 Simulated Annealing & 60.05\% & 20.76s & 2.241e-4s  \\
+	 \hline
+	 Genetic Algorithm & 60.30\% & 218.0s & 3.207e-4s  \\
+	 \hline
+	\end{tabular}
+	\label{table:table3}
+\end{center}
+
+It comes as no surprise that backpropagation resulted in the best method all around considering it is the industry standard for training neural networks. It is an optimization algorithm that is designed for this use case. That being said, the others still performed relatively well.
+
+RHS was clearly the weakest of all of the options, which is not at all surprising. Neural network weight optimization is a continuous problem space, so it following gradients works very well, but it is usually also a very complex surface, which means there are many local maxima and minima, and a simple hill climbing approach doesn't work very well. Additionally, it doesn't even take advantage of the ability to stop training once no more improvement is made because it will just have to repeat. So some attempts may be more efficient, but others will have to run their course. As a result, it ended up being quite a bit slower than other algorithms as well.
+
+Simulated Annealing seems to work very well, but it's still slower than backpropagation, however, that may be heavily influenced by the implementation. I attempted to set the backpropagation and SA nets to terminate early if the loss function did not continue to improve, but it did not seem to be working. As a result, the backpropagation version only required 328 iterations, while the SA version had to use the full 5000. Just doing a proportional adjustment (scaling 5000 iterations down to 328) would put SA at 1.36s for training time, which is not much more that backpropagation. I obviously can't just assume that it would require the name number of iterations, but it is worth noting that if I could have configured it to terminate early, it likely would have been much closer since the time per iteration was only a little bit higher. Either way, it still fell a little bit short when it comes to accuracy as well.
+
+The Genetic Algorithm was once again very effective when it came to accuracy, but much slower. I'm a little bit surprised that it performed just as well as SA because it is a smooth, continuous problem space. Because of that, I assumed that a gradient based algorith such as SA would perform better than GA, but it seems that it is a complex enough space that GA is able to do more exploration and capture some relational information to help it find good solutions. It is clearly too slow for it to be an effective optimizer for Neural Networks, but it was able to get a good accuracy in the end.
 
 \section{Conclusion}
-%TODO
+Randomized optimization is a complex and challenging problem for machine learning. There are many different kinds of problems, each of which have their own complexities and pitfalls, making it impossible to find a sinlge solution for everything. It is no surprise that there are many different algorithms, each with their strengths and weaknesses.
+
+Gradient based solutions such as Random Hill Climbing and Simulated Annealing perform very well on problems where there is a natural gradient, and contains a continuous problem space. They are also very fast, so if a local optimal value is good enough, as is the case sometimes, then they are very effictive at finding them.
+
+Genetic Algorithm and MIMIC are much slower, but capture different information that is easily lost by gradient-based algorithms. There is less left up to chance since they do not need to rely on their current space as much, and instead branch out through crossover and mutation. In situations where a true, global optimal is needed, and some extra time can be spend finding it, they are very effective.
 
 \newpage
 
