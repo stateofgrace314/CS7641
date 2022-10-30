@@ -11,3 +11,6 @@ All development is done in a Linux environment using Docker. The Dockerfiles and
 
 ## Project2 - Randomized Optimization
 Testing out different randomized optimization problems and algorithms
+
+## Project3 - Unsupervised Learning and Dimensionality Reduction
+Implementation and tresting of k-means clustering, Expectation Maximization, PCA, ICA, Randomized Projections, and one other.
