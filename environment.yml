@@ -1,6 +1,7 @@
 name: ml
 channels:
 - conda-forge
+- districtdatalabs
 - defaults
 dependencies:
 - python=3.9
@@ -19,6 +20,7 @@ dependencies:
 - notebook
 - ipywidgets
 - pip=22.3
+- yellowbrick=1.5
 - pip:
   - mlrose-hiive
 #   - gradescope-utils
