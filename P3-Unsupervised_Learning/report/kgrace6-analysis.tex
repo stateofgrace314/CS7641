@@ -231,8 +231,6 @@ As expected, the benchmark has the highest accuracy, with a CV score of 0.84 and
 
 Although most of the results make logical sense and match my predictions, the one surprising find is how well RP performed for the Heart dataset. As previously mentioned, RP maintains Euclidean distance when reducing dimensions, but since many of the features in the Heart dataset are categorical, distance is not significant. I would have expected RP to perform quickly, but not as accurately as either PCA or ICA, but instead found that it is the slowest of the reduced models (although this is likely more related to the more complex networ configuration), and has the second highest CV score, and highest test accuracy. It's possible that there is an element of randomness which is coming into play here since both RP and Neural Networks are affected by randomness and chance, but I would still expect there to be a noticeable difference between RP and PCA, with PCA being more accurate. However, the results don't lie, and my prediction was incorrect.
 
-\section{Conclusion}
-% There are many different clustering methods, but just 2 were tested in this
 
 % \section{References}
 \nocite{Mitchell}
