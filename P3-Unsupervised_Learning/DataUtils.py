@@ -66,9 +66,10 @@ def LoadData(dataset_name:str, test_size:float=0.2):
     # x_train = normalize(x_train, axis=0)
     # x_test = normalize(x_test, axis=0)
 
-    # balance the dataset
+    # get the feature names
+    feature_names = list(data.columns)[:-1]
 
-    return x_train, x_test, y_train, y_test
+    return x_train, x_test, y_train, y_test, feature_names
 
 if __name__ == "__main__":
     out = LoadData("water_potability")

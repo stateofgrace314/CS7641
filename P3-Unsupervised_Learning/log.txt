@@ -1,0 +1,70 @@
+
+NeuralNetwork water_base results:
+        Best cv accuracy = 0.6793715945948121
+        Test Accuracy = 39.58333333333333
+        Train Time = 1.64524188041687
+        Predict Time = 0.0007581710815429688
+        Model Params: {'hidden_layer_sizes': (10,), 'alpha': 0.0005, 'learning_rate_init': 0.0005}
+
+NeuralNetwork water_PCA results:
+        Best cv accuracy = 0.6440616172103242
+        Test Accuracy = 48.55769230769231
+        Train Time = 1.2817549228668212
+        Predict Time = 0.0009191036224365234
+        Model Params: {'hidden_layer_sizes': (20,), 'alpha': 0.0005, 'learning_rate_init': 0.005}
+
+NeuralNetwork water_ICA results:
+        Best cv accuracy = 0.6817876717290002
+        Test Accuracy = 61.858974358974365
+        Train Time = 2.108372163772583
+        Predict Time = 0.001032400131225586
+        Model Params: {'hidden_layer_sizes': (20,), 'alpha': 0.001, 'learning_rate_init': 0.0005}
+
+NeuralNetwork water_RP results:
+        Best cv accuracy = 0.608346814110148
+        Test Accuracy = 61.858974358974365
+        Train Time = 0.8623448371887207
+        Predict Time = 0.0006294727325439453
+        Model Params: {'hidden_layer_sizes': (2, 2), 'alpha': 0.0001, 'learning_rate_init': 0.0005}
+
+NeuralNetwork water_NMF results:
+        Best cv accuracy = 0.614768492808911
+        Test Accuracy = 61.69871794871795
+        Train Time = 0.48804593086242676
+        Predict Time = 0.0008605480194091797
+        Model Params: {'hidden_layer_sizes': (5,), 'alpha': 0.001, 'learning_rate_init': 0.005}
+
+NeuralNetwork heart_base results:
+        Best cv accuracy = 0.8390306122448979
+        Test Accuracy = 85.24590163934425
+        Train Time = 1.0619920253753663
+        Predict Time = 0.0009640693664550781
+        Model Params: {'hidden_layer_sizes': (100,), 'alpha': 0.0001, 'learning_rate_init': 0.0001}
+
+NeuralNetwork heart_PCA results:
+        Best cv accuracy = 0.6902210884353741
+        Test Accuracy = 73.77049180327869
+        Train Time = 0.166825532913208
+        Predict Time = 0.0006920814514160157
+        Model Params: {'hidden_layer_sizes': (10,), 'alpha': 0.0001, 'learning_rate_init': 0.005}
+
+NeuralNetwork heart_ICA results:
+        Best cv accuracy = 0.8513605442176871
+        Test Accuracy = 63.934426229508205
+        Train Time = 0.5659076690673828
+        Predict Time = 0.0008456230163574219
+        Model Params: {'hidden_layer_sizes': (10,), 'alpha': 0.0001, 'learning_rate_init': 0.0005}
+
+NeuralNetwork heart_PB results:
+        Best cv accuracy = 0.8142857142857143
+        Test Accuracy = 75.40983606557377
+        Train Time = 0.7522941589355469
+        Predict Time = 0.0006873607635498047
+        Model Params: {'hidden_layer_sizes': (3, 3), 'alpha': 0.001, 'learning_rate_init': 0.005}
+
+NeuralNetwork heart_NMF results:
+        Best cv accuracy = 0.7352040816326532
+        Test Accuracy = 50.81967213114754
+        Train Time = 0.2835209846496582
+        Predict Time = 0.0007654666900634765
+        Model Params: {'hidden_layer_sizes': (2, 2), 'alpha': 0.0005, 'learning_rate_init': 0.005}

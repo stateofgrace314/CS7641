@@ -17,6 +17,7 @@ OUT_DIR = f"{Path(__file__).parent.resolve()}/plots"
 
 class GMYBWrapper(GaussianMixture, ClusterMixin):
     """
+    GaussianMixture <-> YellowBrick wrapper
     New class which is basically a wrapper wround the sklearn GaussianMixture class to make it
     compatible with Yellowbricks visualizer functions.
     Wrapper idea taken from Chris Vandevelde:
@@ -107,7 +108,7 @@ def runClusteringAnalysis(X, Y, dataset_name, metric="distortion"):
         plt.xticks(xticks)
         plt.xlabel("num clusters")
         plt.grid(visible=True, which="both", axis="x")
-        plt.savefig(filename)
+        plt.savefig(filename, bbox_inches="tight")
         plt.close()
 
 if __name__ == "__main__":
