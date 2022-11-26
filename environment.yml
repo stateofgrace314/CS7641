@@ -23,5 +23,6 @@ dependencies:
 - yellowbrick=1.5
 - pip:
   - mlrose-hiive
+  - mdptoolbox-hiive
 #   - gradescope-utils
 #   - subprocess32
