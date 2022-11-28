@@ -48,11 +48,13 @@ def runForest(verbose=True):
     # plot reward vs gamma
     vi_data.plot(x="gamma", y="reward", title="Forest Management Reward vs. Gamma")
     plt.grid()
+    plt.tight_layout()
     plt.savefig(f"{OUTDIR}/ForestRewardvsGammaVI.png")
     # plot reward vs iterations
     vi_data.sort_values("iterations", inplace=True)
     vi_data.plot(x="iterations", y="reward", title="Forest Management Reward vs. Iterations")
     plt.grid(True)
+    plt.tight_layout()
     plt.savefig(f"{OUTDIR}/ForestRewardvsIterationVI.png")
 
     # get the best one, plot it and save the data
@@ -77,11 +79,13 @@ def runForest(verbose=True):
     # plot reward vs gamma
     pi_data.plot(x="gamma", y="reward", title="Rewards vs. Gamma")
     plt.grid()
+    plt.tight_layout()
     plt.savefig(f"{OUTDIR}/ForestRewardvsGammaPI.png")
     # plot reward vs iteration
     pi_data.sort_values("iterations", inplace=True)
     pi_data.plot(x="iterations", y="reward", title="Rewards vs. Iterations")
     plt.grid()
+    plt.tight_layout()
     plt.savefig(f"{OUTDIR}/ForestRewardvsIterationPI.png")
 
     # get the best one, plot it and save the data
@@ -120,6 +124,7 @@ def runForest(verbose=True):
     mask = np.triu(np.ones_like(ql_corr, dtype=np.bool))
     cmap = sns.diverging_palette(255, 0, as_cmap=True)
     sns.heatmap(ql_corr, mask=mask, cmap=cmap, square=True, linewidths=0.5, cbar_kws={"shrink":.75})
+    plt.tight_layout()
     plt.savefig(f"{OUTDIR}/ForestQlParamCorrelation.png")
 
     # Plots
